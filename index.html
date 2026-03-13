@@ -18,26 +18,12 @@
     --border: #2a2a3a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding-bottom: 80px;
-    overflow-x: hidden;
-  }
-  .header {
-    background: linear-gradient(135deg, #0a0a1a 0%, #13131c 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 20px 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; overflow-x: hidden; }
+  .header { background: linear-gradient(135deg, #0a0a1a 0%, #13131c 100%); border-bottom: 1px solid var(--border); padding: 16px 20px 12px; position: sticky; top: 0; z-index: 100; }
   .header h1 { font-family: 'Space Mono', monospace; font-size: 18px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
   .header p { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
   .tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 68px; z-index: 99; }
-  .tab { flex: 1; padding: 12px 4px; text-align: center; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; border: none; background: none; color: var(--text-dim); transition: all 0.2s; position: relative; font-family: 'Space Mono', monospace; }
+  .tab { flex: 1; padding: 12px 4px; text-align: center; font-size: 10px; font-weight: 700; cursor: pointer; border: none; background: none; color: var(--text-dim); transition: all 0.2s; position: relative; font-family: 'Space Mono', monospace; }
   .tab .tab-icon { font-size: 20px; display: block; margin-bottom: 2px; }
   .tab.active { color: var(--accent); }
   .tab.active::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 2px; background: var(--accent); border-radius: 2px; }
@@ -48,11 +34,10 @@
   textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; line-height: 1.7; padding: 12px; resize: none; font-family: 'Noto Sans JP', sans-serif; outline: none; transition: border-color 0.2s; }
   textarea:focus { border-color: var(--accent); }
   textarea::placeholder { color: var(--text-dim); }
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: 'Space Mono', monospace; letter-spacing: 0.5px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: 'Space Mono', monospace; }
   .btn:active { transform: scale(0.96); }
   .btn-primary { background: var(--accent); color: #000; }
   .btn-danger { background: var(--accent2); color: #fff; }
-  .btn-success { background: var(--accent3); color: #000; }
   .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
   .btn-sm { padding: 8px 14px; font-size: 11px; }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -80,7 +65,7 @@
   .highlight-text { line-height: 1.9; font-size: 15px; max-height: 200px; overflow-y: auto; padding: 12px; background: var(--surface2); border-radius: 8px; border: 1px solid var(--border); }
   .word-span { cursor: pointer; padding: 1px 2px; border-radius: 3px; transition: background 0.1s; }
   .word-span.spoken { background: rgba(0,229,255,0.15); color: var(--accent); }
-  .word-span.current { background: var(--accent); color: #000; border-radius: 3px; }
+  .word-span.current { background: var(--accent); color: #000; }
   .countdown-ring { display: flex; justify-content: center; margin-bottom: 20px; }
   .ring-container { position: relative; width: 160px; height: 160px; }
   .ring-svg { transform: rotate(-90deg); }
@@ -108,43 +93,24 @@
 </style>
 </head>
 <body>
-
 <div class="header">
   <h1>⚡ English Trainer</h1>
   <p>あなた専用の英語トレーニングアプリ</p>
 </div>
-
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('wpm', this)">
-    <span class="tab-icon">📖</span>WPM
-  </button>
-  <button class="tab" onclick="switchTab('tts', this)">
-    <span class="tab-icon">🔊</span>読上げ
-  </button>
-  <button class="tab" onclick="switchTab('speech', this)">
-    <span class="tab-icon">🎙️</span>スピーチ
-  </button>
+  <button class="tab active" onclick="switchTab('wpm', this)"><span class="tab-icon">📖</span>WPM</button>
+  <button class="tab" onclick="switchTab('tts', this)"><span class="tab-icon">🔊</span>読上げ</button>
+  <button class="tab" onclick="switchTab('speech', this)"><span class="tab-icon">🎙️</span>スピーチ</button>
 </div>
-
-<!-- PANEL 1: WPM -->
 <div id="panel-wpm" class="panel active">
   <div class="card">
     <div class="card-title">📝 英文を貼り付けてください</div>
     <textarea id="wpm-text" rows="6" placeholder="Paste your English text here..."></textarea>
   </div>
   <div class="wpm-stats">
-    <div class="stat-box highlight">
-      <div class="stat-value" id="word-count">0</div>
-      <div class="stat-label">WORDS</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value" id="char-count">0</div>
-      <div class="stat-label">CHARS</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value" id="sent-count">0</div>
-      <div class="stat-label">SENTS</div>
-    </div>
+    <div class="stat-box highlight"><div class="stat-value" id="word-count">0</div><div class="stat-label">WORDS</div></div>
+    <div class="stat-box"><div class="stat-value" id="char-count">0</div><div class="stat-label">CHARS</div></div>
+    <div class="stat-box"><div class="stat-value" id="sent-count">0</div><div class="stat-label">SENTS</div></div>
   </div>
   <div class="timer-display" id="wpm-timer">00:00.0</div>
   <div class="wpm-controls">
@@ -158,8 +124,6 @@
     <div class="wpm-feedback" id="wpm-feedback"></div>
   </div>
 </div>
-
-<!-- PANEL 2: TTS -->
 <div id="panel-tts" class="panel">
   <div class="card">
     <div class="card-title">📝 英文を貼り付けてください</div>
@@ -172,13 +136,9 @@
       <span class="speed-value" id="speed-display">1.0×</span>
     </div>
     <input type="range" id="speed-slider" min="5" max="20" value="10" step="1" oninput="updateSpeed(this.value)">
-    <div class="speed-marks">
-      <span>0.5×</span><span>0.75×</span><span>1.0×</span><span>1.25×</span><span>1.5×</span><span>1.75×</span><span>2.0×</span>
-    </div>
+    <div class="speed-marks"><span>0.5×</span><span>0.75×</span><span>1.0×</span><span>1.25×</span><span>1.5×</span><span>1.75×</span><span>2.0×</span></div>
   </div>
-  <div class="progress-bar-wrap">
-    <div class="progress-bar" id="tts-progress"></div>
-  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="tts-progress"></div></div>
   <div class="tts-controls">
     <button class="btn btn-primary" style="flex:1" onclick="ttsPlay()">▶ 再生</button>
     <button class="btn btn-ghost" style="flex:1" onclick="ttsPause()">⏸ 一時停止</button>
@@ -189,8 +149,6 @@
     <div class="highlight-text" id="tts-highlight">テキストを貼り付けて再生するとここにハイライト表示されます。</div>
   </div>
 </div>
-
-<!-- PANEL 3: SPEECH -->
 <div id="panel-speech" class="panel">
   <div class="card">
     <div class="card-title">🎯 1分間スピーチ</div>
@@ -219,17 +177,13 @@
       <div class="no-recordings">録音がまだありません</div>
     </div>
   </div>
-</div>
-
-<script>
+</div><script>
 function switchTab(id, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
   el.classList.add('active');
 }
-
-// WPM
 let wpmInterval = null, wpmStartTime = null, wpmRunning = false;
 document.getElementById('wpm-text').addEventListener('input', updateTextStats);
 function updateTextStats() {
@@ -283,8 +237,6 @@ function wpmReset() {
   document.getElementById('wpm-stop-btn').disabled = true;
   document.getElementById('wpm-result').classList.remove('show');
 }
-
-// TTS
 let ttsWords = [], ttsCurrentWord = 0, ttsSpeed = 1.0, ttsPaused = false;
 function updateSpeed(val) {
   ttsSpeed = val / 10;
@@ -338,13 +290,10 @@ function ttsStop() {
   document.querySelectorAll('.word-span').forEach(s => s.classList.remove('current','spoken'));
   document.getElementById('tts-progress').style.width = '0%';
 }
-
-// RECORDING
 let recMediaRecorder = null, recAudioChunks = [], recCountdown = null;
 let recTimeLeft = 60, recRecording = false, recNumber = 0;
 let recognitionInst = null, currentTranscript = '';
 const CIRCUMFERENCE = 2 * Math.PI * 70;
-
 function updateRing(timeLeft) {
   const ratio = timeLeft / 60;
   const offset = CIRCUMFERENCE * (1 - ratio);
@@ -356,7 +305,6 @@ function updateRing(timeLeft) {
   const s = timeLeft % 60;
   document.getElementById('ring-time').textContent = m + ':' + String(s).padStart(2,'0');
 }
-
 async function recStart() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -371,4 +319,82 @@ async function recStart() {
     recMediaRecorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); saveRecording(); };
     recMediaRecorder.start(200);
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SR = window.SpeechRecognition || window.webkitSpeechRe
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionInst = new SR();
+      recognitionInst.continuous = true; recognitionInst.interimResults = true; recognitionInst.lang = 'en-US';
+      recognitionInst.onresult = function(e) {
+        let interim = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          if (e.results[i].isFinal) currentTranscript += e.results[i][0].transcript + ' ';
+          else interim += e.results[i][0].transcript;
+        }
+        document.getElementById('rec-status').textContent = '🎙 ' + (interim || '録音中...');
+      };
+      recognitionInst.onerror = () => {};
+      recognitionInst.start();
+    }
+    recCountdown = setInterval(() => {
+      recTimeLeft--;
+      updateRing(recTimeLeft);
+      if (recTimeLeft <= 0) recStop();
+    }, 1000);
+  } catch(err) {
+    alert('マイクへのアクセスが拒否されました。\nアドレスバー左の🔒をタップして、マイクを「許可」にしてください。');
+  }
+}
+function recStop() {
+  if (!recRecording) return;
+  recRecording = false;
+  clearInterval(recCountdown);
+  if (recognitionInst) { try { recognitionInst.stop(); } catch(e){} }
+  if (recMediaRecorder && recMediaRecorder.state !== 'inactive') recMediaRecorder.stop();
+  document.getElementById('rec-start-btn').disabled = false;
+  document.getElementById('rec-stop-btn').disabled = true;
+  document.getElementById('rec-dot').classList.remove('active');
+  document.getElementById('rec-status').textContent = '録音完了！';
+}
+function recReset() {
+  recStop(); recTimeLeft = 60; updateRing(60);
+  document.getElementById('rec-status').textContent = '準備完了';
+  document.getElementById('rec-start-btn').disabled = false;
+}
+function saveRecording() {
+  const blob = new Blob(recAudioChunks, { type: 'audio/webm' });
+  const url = URL.createObjectURL(blob);
+  const duration = 60 - recTimeLeft;
+  recNumber++;
+  const now = new Date();
+  const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  const transcript = currentTranscript.trim() || '（文字起こしなし）';
+  const id = 'rec-' + Date.now();
+  const list = document.getElementById('recordings-list');
+  const noRec = list.querySelector('.no-recordings');
+  if (noRec) noRec.remove();
+  const item = document.createElement('div');
+  item.className = 'recording-item'; item.id = id;
+  item.innerHTML = `
+    <div class="rec-item-header">
+      <span class="rec-item-title">録音 #${recNumber} — ${timeStr}</span>
+      <span class="badge badge-cyan">${duration}秒</span>
+    </div>
+    <audio controls style="width:100%;margin-bottom:4px;accent-color:var(--accent);" src="${url}"></audio>
+    <div class="rec-item-actions">
+      <button class="btn btn-ghost btn-sm" onclick="toggleTranscript('${id}')">📝 文字起こし</button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--accent2)" onclick="deleteRecording('${id}','${url}')">🗑 削除</button>
+    </div>
+    <div class="transcript-text" id="t-${id}">${transcript}</div>
+  `;
+  list.insertBefore(item, list.firstChild);
+}
+function toggleTranscript(id) { document.getElementById('t-' + id).classList.toggle('show'); }
+function deleteRecording(id, url) {
+  URL.revokeObjectURL(url);
+  const item = document.getElementById(id);
+  if (item) item.remove();
+  const list = document.getElementById('recordings-list');
+  if (!list.querySelector('.recording-item')) list.innerHTML = '<div class="no-recordings">録音がまだありません</div>';
+}
+updateRing(60);
+</script>
+</body>
+</html>
