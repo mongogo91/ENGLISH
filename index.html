@@ -6,90 +6,84 @@
 <title>English Trainer</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #13131c;
-    --surface2: #1c1c2a;
-    --accent: #00e5ff;
-    --accent2: #ff6b6b;
-    --accent3: #a8ff78;
-    --text: #e8e8f0;
-    --text-dim: #7a7a9a;
-    --border: #2a2a3a;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; overflow-x: hidden; }
-  .header { background: linear-gradient(135deg, #0a0a1a 0%, #13131c 100%); border-bottom: 1px solid var(--border); padding: 16px 20px 12px; position: sticky; top: 0; z-index: 100; }
-  .header h1 { font-family: 'Space Mono', monospace; font-size: 18px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
-  .header p { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-  .tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 68px; z-index: 99; }
-  .tab { flex: 1; padding: 12px 4px; text-align: center; font-size: 10px; font-weight: 700; cursor: pointer; border: none; background: none; color: var(--text-dim); transition: all 0.2s; position: relative; font-family: 'Space Mono', monospace; }
-  .tab .tab-icon { font-size: 20px; display: block; margin-bottom: 2px; }
-  .tab.active { color: var(--accent); }
-  .tab.active::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 2px; background: var(--accent); border-radius: 2px; }
-  .panel { display: none; padding: 20px 16px; }
-  .panel.active { display: block; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
-  .card-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
-  textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; line-height: 1.7; padding: 12px; resize: none; font-family: 'Noto Sans JP', sans-serif; outline: none; transition: border-color 0.2s; }
-  textarea:focus { border-color: var(--accent); }
-  textarea::placeholder { color: var(--text-dim); }
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: 'Space Mono', monospace; }
-  .btn:active { transform: scale(0.96); }
-  .btn-primary { background: var(--accent); color: #000; }
-  .btn-danger { background: var(--accent2); color: #fff; }
-  .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-sm { padding: 8px 14px; font-size: 11px; }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-full { width: 100%; }
-  .wpm-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-  .stat-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 8px; text-align: center; }
-  .stat-value { font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; line-height: 1; }
-  .stat-label { font-size: 9px; color: var(--text-dim); margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
-  .stat-box.highlight .stat-value { color: var(--accent); }
-  .timer-display { font-family: 'Space Mono', monospace; font-size: 48px; color: var(--accent); text-align: center; padding: 16px; background: var(--surface2); border-radius: 10px; letter-spacing: 4px; margin-bottom: 12px; }
-  .wpm-controls { display: flex; gap: 10px; margin-bottom: 12px; }
-  .wpm-result { background: linear-gradient(135deg, var(--surface2), #1a1a2e); border: 1px solid var(--accent); border-radius: 10px; padding: 16px; text-align: center; display: none; }
-  .wpm-result.show { display: block; }
-  .wpm-big { font-family: 'Space Mono', monospace; font-size: 56px; font-weight: 700; color: var(--accent3); line-height: 1; }
-  .wpm-label { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
-  .wpm-feedback { font-size: 14px; color: var(--text); margin-top: 10px; }
-  .speed-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .speed-value { font-family: 'Space Mono', monospace; font-size: 20px; color: var(--accent); font-weight: 700; }
-  input[type=range] { width: 100%; -webkit-appearance: none; height: 4px; border-radius: 2px; background: var(--border); outline: none; }
-  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 10px rgba(0,229,255,0.5); }
-  .speed-marks { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim); font-family: 'Space Mono', monospace; margin-top: 6px; }
-  .tts-controls { display: flex; gap: 10px; margin-bottom: 14px; }
-  .progress-bar-wrap { background: var(--surface2); border-radius: 4px; height: 4px; margin-bottom: 12px; overflow: hidden; }
-  .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent3)); border-radius: 4px; width: 0%; transition: width 0.3s; }
-  .highlight-text { line-height: 1.9; font-size: 15px; max-height: 200px; overflow-y: auto; padding: 12px; background: var(--surface2); border-radius: 8px; border: 1px solid var(--border); }
-  .word-span { cursor: pointer; padding: 1px 2px; border-radius: 3px; transition: background 0.1s; }
-  .word-span.spoken { background: rgba(0,229,255,0.15); color: var(--accent); }
-  .word-span.current { background: var(--accent); color: #000; }
-  .countdown-ring { display: flex; justify-content: center; margin-bottom: 20px; }
-  .ring-container { position: relative; width: 160px; height: 160px; }
-  .ring-svg { transform: rotate(-90deg); }
-  .ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
-  .ring-progress { fill: none; stroke: var(--accent2); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 440; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear, stroke 0.5s; }
-  .ring-time { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Space Mono', monospace; font-size: 36px; font-weight: 700; color: var(--accent2); }
-  .speech-controls { display: flex; gap: 10px; margin-bottom: 12px; }
-  .rec-indicator { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dim); margin-bottom: 12px; height: 20px; }
-  .rec-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent2); opacity: 0; }
-  .rec-dot.active { opacity: 1; animation: blink 1s infinite; }
+  :root { --bg:#0a0a0f; --surface:#13131c; --surface2:#1c1c2a; --accent:#00e5ff; --accent2:#ff6b6b; --accent3:#a8ff78; --text:#e8e8f0; --text-dim:#7a7a9a; --border:#2a2a3a; }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:80px; overflow-x:hidden; }
+  .header { background:linear-gradient(135deg,#0a0a1a,#13131c); border-bottom:1px solid var(--border); padding:16px 20px 12px; position:sticky; top:0; z-index:100; }
+  .header h1 { font-family:'Space Mono',monospace; font-size:18px; color:var(--accent); letter-spacing:2px; text-transform:uppercase; }
+  .header p { font-size:11px; color:var(--text-dim); margin-top:2px; }
+  .tabs { display:flex; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:68px; z-index:99; }
+  .tab { flex:1; padding:12px 4px; text-align:center; font-size:10px; font-weight:700; cursor:pointer; border:none; background:none; color:var(--text-dim); transition:all 0.2s; position:relative; font-family:'Space Mono',monospace; }
+  .tab .tab-icon { font-size:20px; display:block; margin-bottom:2px; }
+  .tab.active { color:var(--accent); }
+  .tab.active::after { content:''; position:absolute; bottom:0; left:10%; right:10%; height:2px; background:var(--accent); border-radius:2px; }
+  .panel { display:none; padding:20px 16px; }
+  .panel.active { display:block; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:14px; }
+  .card-title { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); margin-bottom:12px; }
+  textarea { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:15px; line-height:1.7; padding:12px; resize:none; font-family:'Noto Sans JP',sans-serif; outline:none; transition:border-color 0.2s; }
+  textarea:focus { border-color:var(--accent); }
+  textarea::placeholder { color:var(--text-dim); }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:12px 20px; border-radius:8px; border:none; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:'Space Mono',monospace; }
+  .btn:active { transform:scale(0.96); }
+  .btn-primary { background:var(--accent); color:#000; }
+  .btn-danger { background:var(--accent2); color:#fff; }
+  .btn-ghost { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+  .btn-success { background:var(--accent3); color:#000; }
+  .btn-sm { padding:8px 14px; font-size:11px; }
+  .btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .btn-full { width:100%; }
+  .wpm-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
+  .stat-box { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 8px; text-align:center; }
+  .stat-value { font-family:'Space Mono',monospace; font-size:24px; font-weight:700; line-height:1; }
+  .stat-label { font-size:9px; color:var(--text-dim); margin-top:4px; letter-spacing:1px; text-transform:uppercase; }
+  .stat-box.highlight .stat-value { color:var(--accent); }
+  .timer-display { font-family:'Space Mono',monospace; font-size:48px; color:var(--accent); text-align:center; padding:16px; background:var(--surface2); border-radius:10px; letter-spacing:4px; margin-bottom:12px; }
+  .wpm-controls { display:flex; gap:10px; margin-bottom:12px; }
+  .wpm-result { background:linear-gradient(135deg,var(--surface2),#1a1a2e); border:1px solid var(--accent); border-radius:10px; padding:16px; text-align:center; display:none; }
+  .wpm-result.show { display:block; }
+  .wpm-big { font-family:'Space Mono',monospace; font-size:56px; font-weight:700; color:var(--accent3); line-height:1; }
+  .wpm-label { font-size:12px; color:var(--text-dim); margin-top:4px; }
+  .wpm-feedback { font-size:14px; color:var(--text); margin-top:10px; }
+  .speed-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .speed-value { font-family:'Space Mono',monospace; font-size:20px; color:var(--accent); font-weight:700; }
+  input[type=range] { width:100%; -webkit-appearance:none; height:4px; border-radius:2px; background:var(--border); outline:none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--accent); cursor:pointer; box-shadow:0 0 10px rgba(0,229,255,0.5); }
+  .speed-marks { display:flex; justify-content:space-between; font-size:9px; color:var(--text-dim); font-family:'Space Mono',monospace; margin-top:6px; }
+  .tts-controls { display:flex; gap:10px; margin-bottom:14px; }
+  .progress-bar-wrap { background:var(--surface2); border-radius:4px; height:4px; margin-bottom:12px; overflow:hidden; }
+  .progress-bar { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent3)); border-radius:4px; width:0%; transition:width 0.3s; }
+  .highlight-text { line-height:1.9; font-size:15px; max-height:200px; overflow-y:auto; padding:12px; background:var(--surface2); border-radius:8px; border:1px solid var(--border); }
+  .word-span { padding:1px 2px; border-radius:3px; transition:background 0.1s; }
+  .word-span.spoken { background:rgba(0,229,255,0.15); color:var(--accent); }
+  .word-span.current { background:var(--accent); color:#000; }
+  .countdown-ring { display:flex; justify-content:center; margin-bottom:20px; }
+  .ring-container { position:relative; width:160px; height:160px; }
+  .ring-svg { transform:rotate(-90deg); }
+  .ring-bg { fill:none; stroke:var(--border); stroke-width:8; }
+  .ring-progress { fill:none; stroke:var(--accent2); stroke-width:8; stroke-linecap:round; stroke-dasharray:440; stroke-dashoffset:0; transition:stroke-dashoffset 1s linear,stroke 0.5s; }
+  .ring-time { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Space Mono',monospace; font-size:36px; font-weight:700; color:var(--accent2); }
+  .speech-controls { display:flex; gap:10px; margin-bottom:12px; }
+  .rec-indicator { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-dim); margin-bottom:12px; min-height:20px; }
+  .rec-dot { width:10px; height:10px; border-radius:50%; background:var(--accent2); opacity:0; flex-shrink:0; }
+  .rec-dot.active { opacity:1; animation:blink 1s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-  .recordings-list { display: flex; flex-direction: column; gap: 8px; }
-  .recording-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
-  .rec-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .rec-item-title { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); }
-  .rec-item-actions { display: flex; gap: 6px; margin-top: 6px; }
-  .transcript-text { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: none; }
-  .transcript-text.show { display: block; }
-  .no-recordings { text-align: center; color: var(--text-dim); font-size: 13px; padding: 30px; }
-  .badge { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-family: 'Space Mono', monospace; }
-  .badge-cyan { background: rgba(0,229,255,0.15); color: var(--accent); border: 1px solid rgba(0,229,255,0.3); }
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--surface2); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .recordings-list { display:flex; flex-direction:column; gap:10px; }
+  .recording-item { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px; }
+  .rec-item-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .rec-item-title { font-family:'Space Mono',monospace; font-size:11px; color:var(--accent); }
+  .rec-item-actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .transcript-box { margin-top:10px; padding:10px; background:var(--bg); border-radius:8px; border:1px solid var(--border); display:none; }
+  .transcript-box.show { display:block; }
+  .transcript-box p { font-size:13px; color:var(--text); line-height:1.7; }
+  .transcript-loading { font-size:12px; color:var(--text-dim); }
+  .no-recordings { text-align:center; color:var(--text-dim); font-size:13px; padding:30px; }
+  .badge { display:inline-block; padding:3px 8px; border-radius:20px; font-size:10px; font-family:'Space Mono',monospace; }
+  .badge-cyan { background:rgba(0,229,255,0.15); color:var(--accent); border:1px solid rgba(0,229,255,0.3); }
+  .badge-red { background:rgba(255,107,107,0.15); color:var(--accent2); border:1px solid rgba(255,107,107,0.3); }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:var(--surface2); }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 </style>
 </head>
 <body>
@@ -98,9 +92,9 @@
   <p>あなた専用の英語トレーニングアプリ</p>
 </div>
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('wpm', this)"><span class="tab-icon">📖</span>WPM</button>
-  <button class="tab" onclick="switchTab('tts', this)"><span class="tab-icon">🔊</span>読上げ</button>
-  <button class="tab" onclick="switchTab('speech', this)"><span class="tab-icon">🎙️</span>スピーチ</button>
+  <button class="tab active" onclick="switchTab('wpm',this)"><span class="tab-icon">📖</span>WPM</button>
+  <button class="tab" onclick="switchTab('tts',this)"><span class="tab-icon">🔊</span>読上げ</button>
+  <button class="tab" onclick="switchTab('speech',this)"><span class="tab-icon">🎙️</span>スピーチ</button>
 </div>
 <div id="panel-wpm" class="panel active">
   <div class="card">
@@ -178,222 +172,232 @@
     </div>
   </div>
 </div><script>
-function switchTab(id, el) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('panel-' + id).classList.add('active');
+function switchTab(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
   el.classList.add('active');
 }
-let wpmInterval = null, wpmStartTime = null, wpmRunning = false;
-document.getElementById('wpm-text').addEventListener('input', updateTextStats);
-function updateTextStats() {
-  const text = document.getElementById('wpm-text').value.trim();
-  const words = text ? text.split(/\s+/).filter(w => w.length > 0) : [];
-  const sents = text ? text.split(/[.!?]+/).filter(s => s.trim().length > 0) : [];
-  document.getElementById('word-count').textContent = words.length;
-  document.getElementById('char-count').textContent = text.length;
-  document.getElementById('sent-count').textContent = sents.length;
+
+// WPM
+let wpmInterval=null,wpmStartTime=null,wpmRunning=false;
+document.getElementById('wpm-text').addEventListener('input',updateTextStats);
+function updateTextStats(){
+  const text=document.getElementById('wpm-text').value.trim();
+  const words=text?text.split(/\s+/).filter(w=>w.length>0):[];
+  const sents=text?text.split(/[.!?]+/).filter(s=>s.trim().length>0):[];
+  document.getElementById('word-count').textContent=words.length;
+  document.getElementById('char-count').textContent=text.length;
+  document.getElementById('sent-count').textContent=sents.length;
 }
-function wpmStart() {
-  const text = document.getElementById('wpm-text').value.trim();
-  if (!text) { alert('英文を貼り付けてください'); return; }
-  wpmStartTime = Date.now(); wpmRunning = true;
-  document.getElementById('wpm-start-btn').disabled = true;
-  document.getElementById('wpm-stop-btn').disabled = false;
+function wpmStart(){
+  const text=document.getElementById('wpm-text').value.trim();
+  if(!text){alert('英文を貼り付けてください');return;}
+  wpmStartTime=Date.now();wpmRunning=true;
+  document.getElementById('wpm-start-btn').disabled=true;
+  document.getElementById('wpm-stop-btn').disabled=false;
   document.getElementById('wpm-result').classList.remove('show');
-  wpmInterval = setInterval(wpmTick, 100);
+  wpmInterval=setInterval(wpmTick,100);
 }
-function wpmTick() {
-  const elapsed = (Date.now() - wpmStartTime) / 1000;
-  const min = Math.floor(elapsed / 60);
-  const sec = Math.floor(elapsed % 60);
-  const tenth = Math.floor((elapsed % 1) * 10);
-  document.getElementById('wpm-timer').textContent =
-    String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0') + '.' + tenth;
+function wpmTick(){
+  const elapsed=(Date.now()-wpmStartTime)/1000;
+  const min=Math.floor(elapsed/60);
+  const sec=Math.floor(elapsed%60);
+  const tenth=Math.floor((elapsed%1)*10);
+  document.getElementById('wpm-timer').textContent=
+    String(min).padStart(2,'0')+':'+String(sec).padStart(2,'0')+'.'+tenth;
 }
-function wpmStop() {
-  if (!wpmRunning) return;
-  clearInterval(wpmInterval); wpmRunning = false;
-  const elapsed = (Date.now() - wpmStartTime) / 1000;
-  const text = document.getElementById('wpm-text').value.trim();
-  const words = text.split(/\s+/).filter(w => w.length > 0).length;
-  const wpm = Math.round((words / elapsed) * 60);
-  document.getElementById('wpm-value').textContent = wpm;
+function wpmStop(){
+  if(!wpmRunning)return;
+  clearInterval(wpmInterval);wpmRunning=false;
+  const elapsed=(Date.now()-wpmStartTime)/1000;
+  const words=document.getElementById('wpm-text').value.trim().split(/\s+/).filter(w=>w.length>0).length;
+  const wpm=Math.round((words/elapsed)*60);
+  document.getElementById('wpm-value').textContent=wpm;
   document.getElementById('wpm-result').classList.add('show');
-  document.getElementById('wpm-start-btn').disabled = false;
-  document.getElementById('wpm-stop-btn').disabled = true;
-  let feedback = '';
-  if (wpm < 100) feedback = '🌱 初心者レベル。ゆっくり丁寧に読めています！';
-  else if (wpm < 150) feedback = '📚 平均的な英語リーダー。良い調子！';
-  else if (wpm < 200) feedback = '⚡ 上級リーダー！素晴らしい速度です。';
-  else if (wpm < 250) feedback = '🚀 英語ネイティブ並みの速読！';
-  else feedback = '🌟 超高速！スキャニングモードですか？';
-  document.getElementById('wpm-feedback').textContent = feedback;
+  document.getElementById('wpm-start-btn').disabled=false;
+  document.getElementById('wpm-stop-btn').disabled=true;
+  let f='';
+  if(wpm<100)f='🌱 初心者レベル。ゆっくり丁寧に読めています！';
+  else if(wpm<150)f='📚 平均的な英語リーダー。良い調子！';
+  else if(wpm<200)f='⚡ 上級リーダー！素晴らしい速度です。';
+  else if(wpm<250)f='🚀 英語ネイティブ並みの速読！';
+  else f='🌟 超高速！スキャニングモードですか？';
+  document.getElementById('wpm-feedback').textContent=f;
 }
-function wpmReset() {
-  clearInterval(wpmInterval); wpmRunning = false; wpmStartTime = null;
-  document.getElementById('wpm-timer').textContent = '00:00.0';
-  document.getElementById('wpm-start-btn').disabled = false;
-  document.getElementById('wpm-stop-btn').disabled = true;
+function wpmReset(){
+  clearInterval(wpmInterval);wpmRunning=false;wpmStartTime=null;
+  document.getElementById('wpm-timer').textContent='00:00.0';
+  document.getElementById('wpm-start-btn').disabled=false;
+  document.getElementById('wpm-stop-btn').disabled=true;
   document.getElementById('wpm-result').classList.remove('show');
 }
-let ttsWords = [], ttsCurrentWord = 0, ttsSpeed = 1.0, ttsPaused = false;
-function updateSpeed(val) {
-  ttsSpeed = val / 10;
-  document.getElementById('speed-display').textContent = ttsSpeed.toFixed(1) + '×';
-  if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); ttsPlayFromWord(ttsCurrentWord); }
+
+// TTS
+let ttsWords=[],ttsCurrentWord=0,ttsSpeed=1.0,ttsPaused=false;
+function updateSpeed(val){
+  ttsSpeed=val/10;
+  document.getElementById('speed-display').textContent=ttsSpeed.toFixed(1)+'×';
+  if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();ttsPlayFromWord(0);}
 }
-function buildHighlight(text) {
-  ttsWords = text.match(/\S+/g) || [];
-  document.getElementById('tts-highlight').innerHTML = ttsWords.map((w, i) =>
+function buildHighlight(text){
+  ttsWords=text.match(/\S+/g)||[];
+  document.getElementById('tts-highlight').innerHTML=ttsWords.map((w,i)=>
     `<span class="word-span" id="w-${i}">${w} </span>`).join('');
 }
-function ttsPlay() {
-  const text = document.getElementById('tts-text').value.trim();
-  if (!text) { alert('英文を貼り付けてください'); return; }
-  if (ttsPaused && window.speechSynthesis.paused) { window.speechSynthesis.resume(); ttsPaused = false; return; }
+function ttsPlay(){
+  const text=document.getElementById('tts-text').value.trim();
+  if(!text){alert('英文を貼り付けてください');return;}
+  if(ttsPaused&&window.speechSynthesis.paused){window.speechSynthesis.resume();ttsPaused=false;return;}
   window.speechSynthesis.cancel();
-  buildHighlight(text); ttsCurrentWord = 0; ttsPlayFromWord(0);
+  buildHighlight(text);ttsCurrentWord=0;ttsPlayFromWord(0);
 }
-function ttsPlayFromWord(startIdx) {
-  const text = document.getElementById('tts-text').value.trim();
-  if (!text) return;
-  if (!ttsWords.length) buildHighlight(text);
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.rate = ttsSpeed; utt.lang = 'en-US';
-  let wordIdx = 0;
-  utt.onboundary = function(e) {
-    if (e.name === 'word') {
-      document.querySelectorAll('.word-span').forEach(s => {
+function ttsPlayFromWord(startIdx){
+  const text=document.getElementById('tts-text').value.trim();
+  if(!text)return;
+  if(!ttsWords.length)buildHighlight(text);
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.rate=ttsSpeed;utt.lang='en-US';
+  let wordIdx=0;
+  utt.onboundary=function(e){
+    if(e.name==='word'){
+      document.querySelectorAll('.word-span').forEach(s=>{
         s.classList.remove('current');
-        if (parseInt(s.id.replace('w-','')) < wordIdx) s.classList.add('spoken');
+        if(parseInt(s.id.replace('w-',''))<wordIdx)s.classList.add('spoken');
       });
-      const el = document.getElementById('w-' + wordIdx);
-      if (el) { el.classList.add('current'); el.classList.remove('spoken'); el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-      ttsCurrentWord = wordIdx; wordIdx++;
-      document.getElementById('tts-progress').style.width = (wordIdx / ttsWords.length * 100) + '%';
+      const el=document.getElementById('w-'+wordIdx);
+      if(el){el.classList.add('current');el.classList.remove('spoken');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+      ttsCurrentWord=wordIdx;wordIdx++;
+      document.getElementById('tts-progress').style.width=(wordIdx/ttsWords.length*100)+'%';
     }
   };
-  utt.onend = function() {
-    document.querySelectorAll('.word-span').forEach(s => s.classList.remove('current','spoken'));
-    document.getElementById('tts-progress').style.width = '0%';
-    ttsCurrentWord = 0;
+  utt.onend=function(){
+    document.querySelectorAll('.word-span').forEach(s=>s.classList.remove('current','spoken'));
+    document.getElementById('tts-progress').style.width='0%';
+    ttsCurrentWord=0;
   };
   window.speechSynthesis.speak(utt);
 }
-function ttsPause() {
-  if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) { window.speechSynthesis.pause(); ttsPaused = true; }
-  else if (window.speechSynthesis.paused) { window.speechSynthesis.resume(); ttsPaused = false; }
+function ttsPause(){
+  if(window.speechSynthesis.speaking&&!window.speechSynthesis.paused){window.speechSynthesis.pause();ttsPaused=true;}
+  else if(window.speechSynthesis.paused){window.speechSynthesis.resume();ttsPaused=false;}
 }
-function ttsStop() {
-  window.speechSynthesis.cancel(); ttsPaused = false; ttsCurrentWord = 0;
-  document.querySelectorAll('.word-span').forEach(s => s.classList.remove('current','spoken'));
-  document.getElementById('tts-progress').style.width = '0%';
+function ttsStop(){
+  window.speechSynthesis.cancel();ttsPaused=false;ttsCurrentWord=0;
+  document.querySelectorAll('.word-span').forEach(s=>s.classList.remove('current','spoken'));
+  document.getElementById('tts-progress').style.width='0%';
 }
-let recMediaRecorder = null, recAudioChunks = [], recCountdown = null;
-let recTimeLeft = 60, recRecording = false, recNumber = 0;
-let recognitionInst = null, currentTranscript = '';
-const CIRCUMFERENCE = 2 * Math.PI * 70;
-function updateRing(timeLeft) {
-  const ratio = timeLeft / 60;
-  const offset = CIRCUMFERENCE * (1 - ratio);
-  document.getElementById('ring-progress').style.strokeDashoffset = offset;
-  const hue = Math.round(ratio * 120);
-  document.getElementById('ring-progress').style.stroke = `hsl(${hue}, 80%, 60%)`;
-  document.getElementById('ring-time').style.color = `hsl(${hue}, 80%, 60%)`;
-  const m = Math.floor(timeLeft / 60);
-  const s = timeLeft % 60;
-  document.getElementById('ring-time').textContent = m + ':' + String(s).padStart(2,'0');
+
+// RECORDING
+let recMediaRecorder=null,recAudioChunks=[],recCountdown=null;
+let recTimeLeft=60,recRecording=false,recNumber=0;
+const CIRC=2*Math.PI*70;
+
+function updateRing(t){
+  const ratio=t/60;
+  document.getElementById('ring-progress').style.strokeDashoffset=CIRC*(1-ratio);
+  const hue=Math.round(ratio*120);
+  document.getElementById('ring-progress').style.stroke=`hsl(${hue},80%,60%)`;
+  document.getElementById('ring-time').style.color=`hsl(${hue},80%,60%)`;
+  document.getElementById('ring-time').textContent=Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
 }
-async function recStart() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    recRecording = true; recAudioChunks = []; currentTranscript = '';
-    recTimeLeft = 60; updateRing(60);
-    document.getElementById('rec-start-btn').disabled = true;
-    document.getElementById('rec-stop-btn').disabled = false;
+
+async function recStart(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    recRecording=true;recAudioChunks=[];recTimeLeft=60;updateRing(60);
+    document.getElementById('rec-start-btn').disabled=true;
+    document.getElementById('rec-stop-btn').disabled=false;
     document.getElementById('rec-dot').classList.add('active');
-    document.getElementById('rec-status').textContent = '録音中...';
-    recMediaRecorder = new MediaRecorder(stream);
-    recMediaRecorder.ondataavailable = e => { if (e.data.size > 0) recAudioChunks.push(e.data); };
-    recMediaRecorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); saveRecording(); };
+    document.getElementById('rec-status').textContent='🔴 録音中...';
+    recMediaRecorder=new MediaRecorder(stream);
+    recMediaRecorder.ondataavailable=e=>{if(e.data.size>0)recAudioChunks.push(e.data);};
+    recMediaRecorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());saveRecording();};
     recMediaRecorder.start(200);
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionInst = new SR();
-      recognitionInst.continuous = true; recognitionInst.interimResults = true; recognitionInst.lang = 'en-US';
-      recognitionInst.onresult = function(e) {
-        let interim = '';
-        for (let i = e.resultIndex; i < e.results.length; i++) {
-          if (e.results[i].isFinal) currentTranscript += e.results[i][0].transcript + ' ';
-          else interim += e.results[i][0].transcript;
-        }
-        document.getElementById('rec-status').textContent = '🎙 ' + (interim || '録音中...');
-      };
-      recognitionInst.onerror = () => {};
-      recognitionInst.start();
-    }
-    recCountdown = setInterval(() => {
-      recTimeLeft--;
-      updateRing(recTimeLeft);
-      if (recTimeLeft <= 0) recStop();
-    }, 1000);
-  } catch(err) {
-    alert('マイクへのアクセスが拒否されました。\nアドレスバー左の🔒をタップして、マイクを「許可」にしてください。');
+    recCountdown=setInterval(()=>{
+      recTimeLeft--;updateRing(recTimeLeft);
+      if(recTimeLeft<=0)recStop();
+    },1000);
+  }catch(err){
+    alert('マイクへのアクセスが拒否されました。\nアドレスバー左の🔒をタップしてマイクを「許可」にしてください。');
   }
 }
-function recStop() {
-  if (!recRecording) return;
-  recRecording = false;
+
+function recStop(){
+  if(!recRecording)return;
+  recRecording=false;
   clearInterval(recCountdown);
-  if (recognitionInst) { try { recognitionInst.stop(); } catch(e){} }
-  if (recMediaRecorder && recMediaRecorder.state !== 'inactive') recMediaRecorder.stop();
-  document.getElementById('rec-start-btn').disabled = false;
-  document.getElementById('rec-stop-btn').disabled = true;
+  if(recMediaRecorder&&recMediaRecorder.state!=='inactive')recMediaRecorder.stop();
+  document.getElementById('rec-start-btn').disabled=false;
+  document.getElementById('rec-stop-btn').disabled=true;
   document.getElementById('rec-dot').classList.remove('active');
-  document.getElementById('rec-status').textContent = '録音完了！';
+  document.getElementById('rec-status').textContent='録音完了！';
 }
-function recReset() {
-  recStop(); recTimeLeft = 60; updateRing(60);
-  document.getElementById('rec-status').textContent = '準備完了';
-  document.getElementById('rec-start-btn').disabled = false;
+
+function recReset(){
+  recStop();recTimeLeft=60;updateRing(60);
+  document.getElementById('rec-status').textContent='準備完了';
+  document.getElementById('rec-start-btn').disabled=false;
 }
-function saveRecording() {
-  const blob = new Blob(recAudioChunks, { type: 'audio/webm' });
-  const url = URL.createObjectURL(blob);
-  const duration = 60 - recTimeLeft;
+
+function saveRecording(){
+  const blob=new Blob(recAudioChunks,{type:'audio/webm'});
+  const url=URL.createObjectURL(blob);
+  const duration=60-recTimeLeft;
   recNumber++;
-  const now = new Date();
-  const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-  const transcript = currentTranscript.trim() || '（文字起こしなし）';
-  const id = 'rec-' + Date.now();
-  const list = document.getElementById('recordings-list');
-  const noRec = list.querySelector('.no-recordings');
-  if (noRec) noRec.remove();
-  const item = document.createElement('div');
-  item.className = 'recording-item'; item.id = id;
-  item.innerHTML = `
+  const now=new Date();
+  const timeStr=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  const id='rec-'+Date.now();
+  const list=document.getElementById('recordings-list');
+  const noRec=list.querySelector('.no-recordings');
+  if(noRec)noRec.remove();
+  const item=document.createElement('div');
+  item.className='recording-item';item.id=id;
+  item.innerHTML=`
     <div class="rec-item-header">
       <span class="rec-item-title">録音 #${recNumber} — ${timeStr}</span>
       <span class="badge badge-cyan">${duration}秒</span>
     </div>
-    <audio controls style="width:100%;margin-bottom:4px;accent-color:var(--accent);" src="${url}"></audio>
+    <audio controls style="width:100%;margin:6px 0;accent-color:var(--accent);" src="${url}"></audio>
     <div class="rec-item-actions">
-      <button class="btn btn-ghost btn-sm" onclick="toggleTranscript('${id}')">📝 文字起こし</button>
-      <button class="btn btn-ghost btn-sm" style="color:var(--accent2)" onclick="deleteRecording('${id}','${url}')">🗑 削除</button>
+      <a class="btn btn-success btn-sm" href="${url}" download="speech-${recNumber}.webm">💾 保存</a>
+      <button class="btn btn-ghost btn-sm" onclick="startTranscript('${id}','${url}')">📝 文字起こし</button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--accent2)" onclick="deleteRec('${id}','${url}')">🗑</button>
     </div>
-    <div class="transcript-text" id="t-${id}">${transcript}</div>
+    <div class="transcript-box" id="t-${id}">
+      <p class="transcript-loading">文字起こし中...</p>
+    </div>
   `;
-  list.insertBefore(item, list.firstChild);
+  list.insertBefore(item,list.firstChild);
 }
-function toggleTranscript(id) { document.getElementById('t-' + id).classList.toggle('show'); }
-function deleteRecording(id, url) {
+
+function startTranscript(id,url){
+  const box=document.getElementById('t-'+id);
+  box.classList.add('show');
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    box.querySelector('p').textContent='このブラウザは文字起こし非対応です。Chrome推奨。';
+    return;
+  }
+  box.querySelector('p').textContent='音声を認識中...マイクに向かって話してください。';
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const sr=new SR();
+  sr.lang='en-US';sr.continuous=false;sr.interimResults=false;
+  sr.onresult=e=>{
+    const text=Array.from(e.results).map(r=>r[0].transcript).join(' ');
+    box.querySelector('p').textContent=text||'（認識できませんでした）';
+  };
+  sr.onerror=()=>{box.querySelector('p').textContent='認識に失敗しました。もう一度お試しください。';};
+  sr.start();
+}
+
+function deleteRec(id,url){
   URL.revokeObjectURL(url);
-  const item = document.getElementById(id);
-  if (item) item.remove();
-  const list = document.getElementById('recordings-list');
-  if (!list.querySelector('.recording-item')) list.innerHTML = '<div class="no-recordings">録音がまだありません</div>';
+  const item=document.getElementById(id);
+  if(item)item.remove();
+  const list=document.getElementById('recordings-list');
+  if(!list.querySelector('.recording-item'))list.innerHTML='<div class="no-recordings">録音がまだありません</div>';
 }
+
 updateRing(60);
 </script>
 </body>
